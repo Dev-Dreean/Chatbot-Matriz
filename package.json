@@ -12,6 +12,7 @@
     "launch": "powershell -ExecutionPolicy Bypass -File .\\start.ps1",
     "launch:all": "powershell -ExecutionPolicy Bypass -File .\\start.ps1",
     "config:check": "node scripts/validate-runtime-config.js",
+    "whatsapp:validate:number": "node scripts/validate-whatsapp-number.js",
     "ngrok:start": "node scripts/start-ngrok.js",
     "history": "node scripts/show-conversation-history.js",
     "test": "echo 'No tests configured yet'",
