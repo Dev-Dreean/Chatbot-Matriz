@@ -1,0 +1,8 @@
+version: "3"
+agent:
+  authtoken: 3CLuVQnLLbJRMcnPJulikZBtniL_45e1kCWnN8vT8PUrg6yjR
+
+tunnels:
+  chatbot:
+    proto: http
+    addr: 3001

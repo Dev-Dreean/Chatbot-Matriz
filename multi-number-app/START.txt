@@ -1,0 +1,109 @@
+═══════════════════════════════════════════════════════════════════════════════
+                              COMO FUNCIONA
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣ INSTALAR DEPENDÊNCIAS:
+   npm install
+
+2️⃣ ESCOLHA UMA OPÇÃO:
+
+   OPÇÃO A - Rápido (1 comando):
+   npm test
+
+   OPÇÃO B - Com servidor rodando (2 terminais):
+   Terminal 1: npm run dev
+   Terminal 2: npm test
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              MENU DE TESTES
+═══════════════════════════════════════════════════════════════════════════════
+
+Ao executar npm test, escolha:
+
+[1] Validar Webhook
+    └─ Verifica se o servidor está respondendo
+
+[2] Enviar Mensagem de Texto
+    └─ Envia SMS REAL pro seu WhatsApp
+    └─ Você digita o número: 5511999999999
+    └─ Mensagem chega no seu telefone! 📱
+
+[3] Enviar Imagem
+    └─ Envia imagem pro seu WhatsApp
+
+[4] Marcar como Lido
+    └─ Marca mensagem como lida
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            JÁ ESTÁ CONFIGURADO
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Token WhatsApp Business
+✓ Phone Number ID = 874375492428747
+✓ Webhook token = plansul_2025_bot
+✓ Porta = 3001
+✓ Arquivo .env pronto
+
+NÃO PRECISA MEXER EM NADA!
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            TODOS OS SCRIPTS
+═══════════════════════════════════════════════════════════════════════════════
+
+npm install              Instala dependências (execute uma vez)
+npm start                Inicia servidor simples
+npm run dev              Servidor com auto-reload
+npm test                 Menu de testes interativo
+npm run diagnose         Verifica tudo (ambiente, arquivos, config)
+npm run check            Verificação rápida
+npm run quick-start      Tudo automático
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ERROS MAIS COMUNS
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Servidor não inicia
+   → npm run dev em OUTRO terminal
+
+❌ Token inválido
+   → Copie novo do painel WhatsApp Business
+
+❌ Porta 3001 em uso
+   → Feche outro programa ou altere PORT no .env
+
+❌ npm não encontrado
+   → Instale Node.js de nodejs.org
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ESTRUTURA DO PROJETO
+═══════════════════════════════════════════════════════════════════════════════
+
+multi-number-app/
+├── app.js                    ← Servidor Express
+├── package.json              ← Dependências
+├── .env                      ← Configurações (já pronto!)
+├── config/whatsappConfig.js
+├── services/whatsappSender.js
+├── middleware/webhookHandler.js
+├── routes/webhook.js
+├── database/userData.js
+└── tests/
+    ├── testMultiNumber.js    ← Suite de testes
+    ├── diagnose.js           ← Diagnóstico
+    └── pretest-check.js      ← Verificação
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        COMECE AGORA
+═══════════════════════════════════════════════════════════════════════════════
+
+npm install && npm test
+
+Pronto! Escolha uma opção no menu e teste.
+
+═══════════════════════════════════════════════════════════════════════════════

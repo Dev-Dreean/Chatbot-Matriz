@@ -1,0 +1,38 @@
+{
+  "version": "0.2",
+  "language": "pt_BR,en",
+  "dictionaries": [
+    "portuguese-brazilian",
+    "english"
+  ],
+  "ignoreWords": [
+    "FOLHA", "PONTO", "XAXIM", "INICIAR", "RÁPIDO", "ngrok", "plansul", "WHATSAPP", "Baileys", "Supabase", "Neon", "webhook",
+    "Formas", "Iniciar", "escolha", "Opção", "Mais", "Rápido", "Abra", "Abre", "automaticamente", "precisa", "digitar", "nada",
+    "preferir", "Depois", "Copie", "painel", "Acesse", "mensagem", "rodando", "aguardando", "mensagens", "ativo", "configurado",
+    "Número", "verificado", "errado", "Erro", "Solução", "comando", "encontrado", "Instale", "Porta", "Feche", "programa", "altere",
+    "conexão", "Verifique", "reinicie", "Dúvidas", "sozinho", "detalhados",
+    "GERENCIADOR", "ESTADO", "USUÁRIO", "Rastreia", "persiste", "estado", "cada", "conversa", "duplicatas", "respeita", "limites",
+    "evitar", "Carrega", "estados", "persistidos", "arquivo", "Converte", "Carregados", "usuários",
+    "Salva", "Obtém", "atual", "usuário", "número", "Estado", "Marca", "recebeu", "vindas", "triplicação", "Verifica",
+    "Limpa", "após", "conclusão", "fluxo", "limpo", "cuidado", "foram", "limpos",
+    "Estatísticas", "Removidos", "antigos", "mais", "Imprime", "Lista", "ativos",
+    "INICIA", "NGROK", "clicando", "duas", "vezes", "errorlevel", "Instala", "dependencias", "necessario",
+    "Instalando", "Abrindo", "INICIADO", "SUCESSO", "PROXIMOS", "PASSOS", "Guarde", "cinzento", "receber",
+    "terminais", "diferentes", "diretório", "está", "instalado", "Pressione", "fechar",
+    "PRÓXIMOS",
+    "melhorado", "rastreia", "exatamente", "passo", "usando", "Persiste", "Recupera", "reiniciar", "duplicadas", "resolvida",
+    "última", "atividade", "enviadas", "enviar", "Monitorar", "Estados", "Usuários", "Acessar", "navegador", "enquanto", "mostrar",
+    "Verificar", "Arquivo", "Cada", "registro", "Possíveis", "Significado", "Primeiro", "contato", "ainda", "ação",
+    "Aguardando", "cadastro", "envio", "folha", "termo", "Perguntando", "deseja", "substituir", "assinado", "eletrônico",
+    "Usar", "Código", "Obter", "Definir", "João", "ABRIL", "Marcar", "deve", "estar", "configurada", "usar", "carregado", "usuarios"
+  ],
+  "ignoreRegExpList": [
+    "^pt_BR$"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.{md,bat,ps1,js}",
+      "language": "pt_BR,en"
+    }
+  ]
+}

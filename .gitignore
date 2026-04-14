@@ -1,0 +1,60 @@
+# Dependências
+node_modules/
+package-lock.json
+
+# Variáveis de ambiente (CRÍTICO - NUNCA COMMITAR)
+.env
+
+## Autenticação antiga (Baileys) removida — limpo
+
+# Dados do bot
+bot_data/
+backup/
+logs/
+
+# Planilhas e documentos (dados sensíveis)
+*.xlsx
+*.xls
+*.csv
+*.pdf
+
+# Arquivos temporários
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+npm-debug.log*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Executáveis e builds
+*.exe
+*.zip
+dist/
+build/
+
+# Python (se houver)
+venv/
+__pycache__/
+
+# PM2
+pm2*
+ecosystem.config.js
+
+# Backup do código antigo
+*.backup
+*.bak
+Folha Ponto - Chatbot (Baileys).js.backup
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Testes temporários
+test-*.js
+debug-*.js

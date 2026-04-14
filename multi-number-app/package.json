@@ -1,0 +1,23 @@
+{
+  "name": "whatsapp-cloud-api-multi",
+  "version": "1.0.0",
+  "description": "WhatsApp Cloud API com multiplos numeros",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "node tests/testMultiNumber.js",
+    "check": "node tests/pretest-check.js",
+    "diagnose": "node tests/diagnose.js",
+    "quick-start": "npm install && npm run diagnose && npm test"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

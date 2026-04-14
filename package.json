@@ -1,0 +1,40 @@
+{
+  "name": "chatbot-whatsapp-cloud-api",
+  "version": "2.0.0",
+  "description": "Bot de WhatsApp integrado com Cloud API oficial para Folha Ponto - Plansul",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "node scripts/free-port.js",
+    "start": "node index.js",
+    "predev": "node scripts/free-port.js",
+    "dev": "node index.js",
+    "dev/start": "node scripts/free-port.js && node index.js",
+    "launch": "powershell -ExecutionPolicy Bypass -File .\\start.ps1",
+    "launch:all": "powershell -ExecutionPolicy Bypass -File .\\start.ps1",
+    "config:check": "node scripts/validate-runtime-config.js",
+    "ngrok:start": "node scripts/start-ngrok.js",
+    "history": "node scripts/show-conversation-history.js",
+    "test": "echo 'No tests configured yet'",
+    "whatsapp:register-pending": "node scripts/register-pending.js",
+    "db:setup": "node scripts/setup-postgres.js",
+    "db:migrate:xlsx": "node scripts/migrate-xlsx-to-postgres.js",
+    "db:check": "node scripts/check-postgres.js",
+    "db:configure": "node scripts/configure-supabase.js",
+    "db:activate": "node scripts/activate-supabase.js"
+  },
+  "author": "Plansul",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.2",
+    "ngrok": "^5.0.0-beta.2",
+    "pdf-parse": "^1.1.1",
+    "node-cron": "^3.0.3",
+    "pg": "^8.13.1",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
