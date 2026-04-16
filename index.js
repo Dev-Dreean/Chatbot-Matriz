@@ -60,6 +60,7 @@ const { getVariation } = require('./message-variations');
 const NameHandling = require('./name-handling-rules');
 const { createPostgresStorage } = require('./lib/postgres-storage');
 const UserStateManager = require('./lib/user-state-manager');
+const { getStaffForCategory, formatStaffContact } = require('./lib/staff-contacts');
 
 // ========== CONFIGURAÇÃO ==========
 // Use porta do .env ou sistema; padrão alterado para 3001 para evitar conflitos locais
@@ -430,34 +431,67 @@ function getMainMenuRows() {
     ];
 }
 
-// ========== INFORMAÇÕES POR CATEGORIA (PLACEHOLDERS E TEXTOS) ==========
+// ========== INFORMAÇÕES POR CATEGORIA (DINÂMICA COM RESPONSÁVEIS) ==========
 const CATEGORY_INFO = {
     // Folha Ponto
-    FP_DUVIDAS: `📋 *FOLHA PONTO - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    FP_DUVIDAS: () => {
+        const staff = getStaffForCategory('FP_DUVIDAS');
+        return `📋 *FOLHA PONTO - DÚVIDAS*\n\nPara esclarecer dúvidas sobre folha ponto, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Contracheque
-    CC_DUVIDAS: `💰 *CONTRACHEQUE - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    CC_DUVIDAS: () => {
+        const staff = getStaffForCategory('CC_DUVIDAS');
+        return `💰 *CONTRACHEQUE - DÚVIDAS*\n\nPara esclarecer dúvidas sobre contracheque, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Férias
-    FER_DUVIDAS: `🌴 *FÉRIAS - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    FER_DUVIDAS: () => {
+        const staff = getStaffForCategory('FER_DUVIDAS');
+        return `🌴 *FÉRIAS - DÚVIDAS*\n\nPara esclarecer dúvidas sobre férias, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Atestados
-    AT_DUVIDAS: `🏥 *ATESTADOS MÉDICOS - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    AT_DUVIDAS: () => {
+        const staff = getStaffForCategory('AT_DUVIDAS');
+        return `🏥 *ATESTADOS MÉDICOS - DÚVIDAS*\n\nPara esclarecer dúvidas sobre atestados, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Vale Alimentação
-    VA_PERDA: `🍽️ *VALE ALIMENTAÇÃO - COMUNICAR PERDA*\n\n⏳ *PLACEHOLDER - Contacte o RH para comunicar a perda*\n\n🔙 Digite *menu* para voltar`,
-    VA_DUVIDAS: `🍽️ *VALE ALIMENTAÇÃO - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    VA_PERDA: () => {
+        const staff = getStaffForCategory('VA_PERDA');
+        return `🍽️ *VALE ALIMENTAÇÃO - COMUNICAR PERDA*\n\nPara comunicar perda de vale alimentação, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
+    VA_DUVIDAS: () => {
+        const staff = getStaffForCategory('VA_DUVIDAS');
+        return `🍽️ *VALE ALIMENTAÇÃO - DÚVIDAS*\n\nPara esclarecer dúvidas sobre vale alimentação, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Vale Transporte
-    VT_PERDA: `🚌 *VALE TRANSPORTE - COMUNICAR PERDA*\n\n⏳ *PLACEHOLDER - Contacte o RH para comunicar a perda*\n\n🔙 Digite *menu* para voltar`,
-    VT_DUVIDAS: `🚌 *VALE TRANSPORTE - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    VT_PERDA: () => {
+        const staff = getStaffForCategory('VT_PERDA');
+        return `🚌 *VALE TRANSPORTE - COMUNICAR PERDA*\n\nPara comunicar perda de vale transporte, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
+    VT_DUVIDAS: () => {
+        const staff = getStaffForCategory('VT_DUVIDAS');
+        return `🚌 *VALE TRANSPORTE - DÚVIDAS*\n\nPara esclarecer dúvidas sobre vale transporte, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Admissão
-    ADM_EXAME: `📝 *ADMISSÃO - MARCAÇÃO EXAME ADMISSIONAL*\n\n⏳ *PLACEHOLDER - Será marcado pela empresa*\n\n🔙 Digite *menu* para voltar`,
-    ADM_DUVIDAS: `📝 *ADMISSÃO - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    ADM_EXAME: () => {
+        const staff = getStaffForCategory('ADM_EXAME');
+        return `📝 *ADMISSÃO - MARCAÇÃO EXAME ADMISSIONAL*\n\nPara solicitar marcação de exame admissional, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
+    ADM_DUVIDAS: () => {
+        const staff = getStaffForCategory('ADM_DUVIDAS');
+        return `📝 *ADMISSÃO - DÚVIDAS*\n\nPara esclarecer dúvidas sobre admissão, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
     
     // Uniforme
-    UNI_TROCA: `👕 *UNIFORME - TROCA*\n\n⏳ *PLACEHOLDER - Contacte o RH para solicitar troca*\n\n🔙 Digite *menu* para voltar`,
+    UNI_TROCA: () => {
+        const staff = getStaffForCategory('UNI_TROCA');
+        return `👕 *UNIFORME - TROCA*\n\nPara solicitar troca de uniforme, entre em contato:${formatStaffContact(staff)}\n🔙 Digite *menu* para voltar`;
+    },
 };
 
 // ========== MAPEAMENTO DE DOCUMENTOS (categoria → destino de armazenamento) ==========
@@ -636,7 +670,9 @@ async function sendRemainingMenuList(to, userName, currentMenuId, context = {}) 
 }
 
 async function sendInfoScreen(to, userName, text, currentMenuId, context = {}) {
-    const normalizedText = stripMenuHint(text);
+    // Se text é uma função, executa; senão usa como string
+    const resolvedText = typeof text === 'function' ? text() : text;
+    const normalizedText = stripMenuHint(resolvedText);
     await sendDirectText(to, normalizedText, context, { userName });
     await new Promise(resolve => setTimeout(resolve, 700));
     return sendRemainingMenuList(to, userName, currentMenuId, context);
