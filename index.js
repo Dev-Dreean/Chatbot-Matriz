@@ -1016,7 +1016,7 @@ async function handleIncomingMessage({ from, body, pushName, messageId, type, in
         }
 
         // ===== NOVO MAPEAMENTO: 9 CATEGORIAS + SUB-OPÇÕES =====
-        if (type === 'interactive_list' && interactiveId) {
+        if ((type === 'interactive_list' || type === 'interactive_button') && interactiveId) {
             // Menu principal (9 categorias)
             const mainCategoryMap = {
                 CAT_FOLHA_PONTO: async () => sendFolhaPontoSubMenu(fromJid, userName, context),
