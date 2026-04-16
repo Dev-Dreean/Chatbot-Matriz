@@ -61,6 +61,7 @@ const NameHandling = require('./name-handling-rules');
 const { createPostgresStorage } = require('./lib/postgres-storage');
 const UserStateManager = require('./lib/user-state-manager');
 const { getStaffForCategory, formatStaffContact } = require('./lib/staff-contacts');
+const { createLocalFileStore, safeSegment, collaboratorFolder, yearFolder } = require('./lib/local-file-store');
 
 // ========== CONFIGURAÇÃO ==========
 // Use porta do .env ou sistema; padrão alterado para 3001 para evitar conflitos locais
@@ -90,36 +91,17 @@ const cadastroStorage = createPostgresStorage({ months: MONTHS });
 let DATABASE_STORAGE_ENABLED = cadastroStorage.isEnabled();
 
 // ========== CAMINHOS DE ARQUIVOS ==========
-const appPath = process.cwd();
-let PRIVATE_BASE, PUBLIC_BASE, ATESTADOS_BASE, TERMOS_CIENCIA_BASE;
-let NETWORK_STORAGE_AVAILABLE = false;
-const LOGS_DIR = path.join(appPath, 'logs');
+const LOCAL_DATABASE_ROOT = path.resolve(process.env.LOCAL_DATABASE_ROOT || 'C:\\Sistemas\\Chatbot-Matriz\\Banco de dados');
+const localFileStore = createLocalFileStore({ rootPath: LOCAL_DATABASE_ROOT });
+const PRIVATE_BASE = path.join(LOCAL_DATABASE_ROOT, 'interno');
+const PUBLIC_BASE = path.join(LOCAL_DATABASE_ROOT, 'colaboradores');
+const ATESTADOS_BASE = path.join(LOCAL_DATABASE_ROOT, 'documentos', 'atestados');
+const TERMOS_CIENCIA_BASE = path.join(LOCAL_DATABASE_ROOT, 'documentos', 'termos_ciencia');
+const LOGS_DIR = path.join(LOCAL_DATABASE_ROOT, 'historico');
 const CONVERSATION_LOG_FILE = path.join(LOGS_DIR, 'conversation-history.jsonl');
-const CONVERSATION_VIEW_DIR = path.join(LOGS_DIR, 'conversations');
+const CONVERSATION_VIEW_DIR = path.join(LOGS_DIR, 'por-telefone');
+const DATABASE_FILES_ROOT = LOCAL_DATABASE_ROOT;
 
-try {
-    PRIVATE_BASE = '\\\\172.20.30.101\\rh\\FILIAL PR\\FOLHA PONTO PROJETOS\\WPPCHATBOT - FOLHAS PONTOS\\System';
-    PUBLIC_BASE = '\\\\172.20.30.101\\rh\\FILIAL PR\\FOLHA PONTO PROJETOS\\WPPCHATBOT - FOLHAS PONTOS';
-    ATESTADOS_BASE = '\\\\172.20.30.101\\rh\\FILIAL PR\\PROJETO ATESTADOS';
-    TERMOS_CIENCIA_BASE = '\\\\172.20.30.101\\rh\\FILIAL PR\\PROJETO TERMOS_CIENCIA';
-
-    if (!fs.existsSync(path.dirname(PRIVATE_BASE))) {
-        throw new Error('Rede não acessível');
-    }
-    NETWORK_STORAGE_AVAILABLE = true;
-    console.log('✅ Usando caminhos de rede corporativa');
-} catch (error) {
-    const localDataPath = path.join(appPath, 'bot_data');
-    PRIVATE_BASE = path.join(localDataPath, 'private');
-    PUBLIC_BASE = path.join(localDataPath, 'public');
-    ATESTADOS_BASE = path.join(PUBLIC_BASE, 'ATESTADOS');
-    TERMOS_CIENCIA_BASE = path.join(PUBLIC_BASE, 'TERMOS_CIENCIA');
-
-    console.warn('⚠️ Rede corporativa indisponível:', error.message);
-    console.log(`📁 Usando armazenamento local secundário em: ${localDataPath}`);
-}
-
-// Criar pastas necessárias
 [PRIVATE_BASE, PUBLIC_BASE, ATESTADOS_BASE, TERMOS_CIENCIA_BASE, LOGS_DIR, CONVERSATION_VIEW_DIR].forEach(dir => {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -133,7 +115,7 @@ if (DATABASE_STORAGE_ENABLED) {
 }
 
 // ========== ESTADO DA APLICAÇÃO ==========
-const stateManager = new UserStateManager(cadastroStorage);
+const stateManager = new UserStateManager(localFileStore);
 const REPORT_DATA = {
     cadastros: [],
     enviosPDF: [],
@@ -351,36 +333,16 @@ async function saveCadastroData(data) {
 
 // Adiciona uma entrada simples ao relatório de atividades
 async function appendRelatorioAtividades(entry) {
-    if (!DATABASE_STORAGE_ENABLED) {
-        return;
-    }
-
     try {
-        await cadastroStorage.appendRelatorioAtividades(entry);
+        await localFileStore.appendRelatorioAtividades(entry);
     } catch (error) {
-        DATABASE_STORAGE_ENABLED = false;
-        logEvento({ tipo: 'WARN', mensagem: 'Falha ao gravar relatório no PostgreSQL', extra: error.message });
-    }
-}
-
-function appendConversationMirror(entry) {
-    try {
-        const line = JSON.stringify(entry);
-        fs.appendFileSync(CONVERSATION_LOG_FILE, `${line}\n`, 'utf8');
-
-        const phoneLabel = cleanPhone(entry.phone || '') || 'desconhecido';
-        const perPhonePath = path.join(CONVERSATION_VIEW_DIR, `${phoneLabel}.log`);
-        const preview = String(entry.body || '').replace(/\s+/g, ' ').trim();
-        const rendered = `[${entry.timestamp}] [${entry.direction}] [${entry.messageType || 'text'}] ${entry.name || ''} ${preview}`.trim();
-        fs.appendFileSync(perPhonePath, `${rendered}\n`, 'utf8');
-    } catch (error) {
-        logEvento({ tipo: 'WARN', mensagem: 'Falha ao gravar historico local da conversa', extra: error.message });
+        logEvento({ tipo: 'WARN', mensagem: 'Falha ao gravar relatorio local', extra: error.message });
     }
 }
 
 async function appendConversationHistory(entry) {
     const safeEntry = {
-        timestamp: formatDateTime(),
+        timestamp: new Date().toISOString(),
         direction: entry.direction || 'unknown',
         phone: cleanPhone(entry.phone || ''),
         name: entry.name || '',
@@ -390,17 +352,10 @@ async function appendConversationHistory(entry) {
         metadata: entry.metadata || {}
     };
 
-    appendConversationMirror(safeEntry);
-
-    if (!DATABASE_STORAGE_ENABLED || typeof cadastroStorage.appendConversationMessage !== 'function') {
-        return;
-    }
-
     try {
-        await cadastroStorage.appendConversationMessage(safeEntry);
+        await localFileStore.appendConversationMessage(safeEntry);
     } catch (error) {
-        DATABASE_STORAGE_ENABLED = false;
-        logEvento({ tipo: 'WARN', mensagem: 'Falha ao gravar historico no PostgreSQL', extra: error.message });
+        logEvento({ tipo: 'WARN', mensagem: 'Falha ao gravar historico local da conversa', extra: error.message });
     }
 }
 
@@ -1674,42 +1629,55 @@ app.post('/webhook', async (req, res) => {
                         return;
                     }
 
-                    // Determina destino baseado no fluxo do usuário
-                    let destDir = PRIVATE_BASE; // secundário / espelho
+                    // Determina destino baseado no fluxo do usuario
+                    const yearDir = yearFolder(new Date());
+                    const personName = (state && state.name) ? state.name : (document.pushName || 'SEM_NOME');
+                    const shouldReplace = state.step === 'await_pdf' && state.replace;
                     let action = 'DOC_RECEBIDO';
                     let storageCategory = 'documento';
-                    let storageRelativePath = '';
                     let monthRef = null;
+                    let destDir = localFileStore.buildDocumentDir({
+                        year: yearDir,
+                        name: personName,
+                        phone,
+                        category: 'documento'
+                    });
 
                     if (state.step === 'await_pdf') {
-                        // Folha ponto -> salva em \...\WPPCHATBOT - FOLHAS PONTOS\<ANO>\<MM-MES>
                         const monthName = state.month || currentMonth();
-                        const yearDir = String(new Date().getFullYear());
-                        const monthDir = monthFolderLabel(monthName);
-                        destDir = path.join(PUBLIC_BASE, yearDir, monthDir);
+                        monthRef = monthName;
                         action = 'ENVIO_PDF';
                         storageCategory = 'folha_ponto';
-                        monthRef = monthName;
-                        storageRelativePath = path.join(yearDir, monthDir);
+                        destDir = localFileStore.buildDocumentDir({
+                            year: yearDir,
+                            name: personName,
+                            phone,
+                            category: 'folha_ponto',
+                            monthLabel: monthFolderLabel(monthName)
+                        });
                     } else if (state.step === 'await_document' && state.category) {
-                        // ===== NOVO: Upload genérico para outras categorias =====
                         const docConfig = DOCFLOW_CONFIG[state.category];
                         if (docConfig) {
                             storageCategory = state.category;
                             action = `ENVIO_${state.category.toUpperCase().replace(/_/g, '_')}`;
-                            storageRelativePath = docConfig.subPath;
-                            destDir = path.join(PUBLIC_BASE, docConfig.subPath);
+                            destDir = localFileStore.buildDocumentDir({
+                                year: yearDir,
+                                name: personName,
+                                phone,
+                                category: state.category
+                            });
                         }
-                        // Não valida número de páginas ou conteúdo para docs genéricos
                     } else if (document.fileName && /atestad/i.test(document.fileName)) {
-                        // heurística: se filename contém 'atest', salva em ATESTADOS_BASE
-                        destDir = ATESTADOS_BASE;
+                        destDir = localFileStore.buildDocumentDir({
+                            year: yearDir,
+                            name: personName,
+                            phone,
+                            category: 'atestados'
+                        });
                         action = 'ATESTADO_PDF';
                         storageCategory = 'atestado';
-                        storageRelativePath = 'ATESTADOS';
                     }
 
-                    // Garante pasta destino
                     if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
 
                     logEvento({
@@ -1719,11 +1687,8 @@ app.post('/webhook', async (req, res) => {
                         extra: destDir
                     });
 
-                    // Determina nome do arquivo: deve ser NOME COMPLETO da pessoa (quando disponível no estado)
-                    const personName = (state && state.name) ? state.name : (document.pushName || 'SEM_NOME');
                     const safePersonName = toSafeFileName(personName);
 
-                    // Extensão do arquivo
                     let ext = path.extname(document.fileName || '') || '';
                     if (!ext && media.mimeType) {
                         if (media.mimeType.includes('pdf')) ext = '.PDF';
@@ -1732,41 +1697,23 @@ app.post('/webhook', async (req, res) => {
                             ext = parts[1] ? `.${parts[1]}` : '';
                         }
                     }
-                    // Normaliza extensão para uppercase .PDF
                     ext = ext ? ext.toUpperCase() : '';
 
-                    // Monta nome final: NOME_COMPLETO + ext
                     const baseName = `${safePersonName.toUpperCase()}${ext}`;
                     let finalName = baseName;
-                    let logicalName = storageRelativePath ? path.join(storageRelativePath, finalName) : finalName;
-                    const shouldReplace = state.step === 'await_pdf' && state.replace;
+                    const existingFile = path.join(destDir, finalName);
 
-                    if (DATABASE_STORAGE_ENABLED) {
-                        const existingDocument = await cadastroStorage.getStoredDocument(storageCategory, logicalName);
-                        if (existingDocument) {
-                            if (shouldReplace) {
-                                action = 'SUBSTITUIU_PDF';
-                            } else {
-                                const ts = Date.now();
-                                finalName = `${safePersonName.toUpperCase()}_${ts}${ext}`;
-                                logicalName = storageRelativePath ? path.join(storageRelativePath, finalName) : finalName;
+                    if (fs.existsSync(existingFile)) {
+                        if (shouldReplace) {
+                            try {
+                                fs.unlinkSync(existingFile);
+                            } catch (e) {
+                                logEvento({ tipo: 'WARN', mensagem: 'Falha ao remover arquivo antigo antes de substituir', telefone: phone, extra: e.message });
                             }
-                        }
-                    } else {
-                        const existingFile = path.join(destDir, finalName);
-                        if (fs.existsSync(existingFile)) {
-                            if (shouldReplace) {
-                                try {
-                                    fs.unlinkSync(existingFile);
-                                } catch (e) {
-                                    logEvento({ tipo: 'WARN', mensagem: 'Falha ao remover arquivo antigo antes de substituir', telefone: phone, extra: e.message });
-                                }
-                                action = 'SUBSTITUIU_PDF';
-                            } else {
-                                const ts = Date.now();
-                                finalName = `${safePersonName.toUpperCase()}_${ts}${ext}`;
-                                logicalName = storageRelativePath ? path.join(storageRelativePath, finalName) : finalName;
-                            }
+                            action = 'SUBSTITUIU_PDF';
+                        } else {
+                            const ts = Date.now();
+                            finalName = `${safePersonName.toUpperCase()}_${ts}${ext}`;
                         }
                     }
 
@@ -1774,45 +1721,14 @@ app.post('/webhook', async (req, res) => {
                     let primaryStorageRef = secondaryDest;
                     let savedBytes = media.buffer.length;
 
-                    if (DATABASE_STORAGE_ENABLED) {
-                        try {
-                            await cadastroStorage.saveDocument({
-                                category: storageCategory,
-                                logicalName,
-                                fileName: finalName,
-                                mimeType: media.mimeType || document.mimeType || null,
-                                buffer: media.buffer,
-                                phone,
-                                name: personName,
-                                monthRef,
-                                storagePath: secondaryDest,
-                                metadata: {
-                                    action,
-                                    originalFileName: document.fileName || finalName,
-                                    step: state.step || null,
-                                    networkStorageAvailable: NETWORK_STORAGE_AVAILABLE
-                                }
-                            });
-                            primaryStorageRef = `postgres://${storageCategory}/${logicalName.replace(/\\/g, '/')}`;
-                        } catch (error) {
-                            DATABASE_STORAGE_ENABLED = false;
-                            logEvento({ tipo: 'WARN', mensagem: 'Falha ao salvar documento no PostgreSQL; usando filesystem', telefone: phone, extra: error.message });
-                        }
+                    const primaryWrite = await saveFileToSecondaryStorage(secondaryDest, media.buffer);
+                    if (!primaryWrite) {
+                        await queueMessage(fromJid, 'Nao foi possivel salvar o arquivo no momento. Tente novamente mais tarde.', 2);
+                        return;
                     }
+                    savedBytes = primaryWrite.sizeBytes;
 
-                    if (!DATABASE_STORAGE_ENABLED) {
-                        const primaryWrite = await saveFileToSecondaryStorage(secondaryDest, media.buffer);
-                        if (!primaryWrite) {
-                            await queueMessage(fromJid, '❌ Não foi possível salvar o arquivo no momento. Tente novamente mais tarde.', 2);
-                            return;
-                        }
-                        savedBytes = primaryWrite.sizeBytes;
-                        primaryStorageRef = primaryWrite.path;
-                    }
-
-                    const mirrorWrite = DATABASE_STORAGE_ENABLED
-                        ? await saveFileToSecondaryStorage(secondaryDest, media.buffer)
-                        : null;
+                    const mirrorWrite = null;
 
                     // Se for envios de folha, marca no cadastro mês como enviado
                     if (state.step === 'await_pdf') {
@@ -2019,4 +1935,3 @@ process.on('SIGINT', () => {
 });
 
 console.log('✅ Bot inicializado - aguardando mensagens...\n');
-

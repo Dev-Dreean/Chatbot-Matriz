@@ -3,8 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const appPath = process.cwd();
-const logsDir = path.join(appPath, 'logs', 'conversations');
+const databaseRoot = path.resolve(process.env.LOCAL_DATABASE_ROOT || 'C:\\Sistemas\\Chatbot-Matriz\\Banco de dados');
 const phoneArg = String(process.argv[2] || '').replace(/\D/g, '');
 
 if (!phoneArg) {
@@ -12,9 +11,15 @@ if (!phoneArg) {
     process.exit(1);
 }
 
-const targetFile = path.join(logsDir, `${phoneArg}.log`);
+const candidates = [
+    path.join(databaseRoot, 'historico', 'por-telefone', `${phoneArg}.jsonl`),
+    path.join(databaseRoot, 'historico', 'por-telefone', `${phoneArg}.log`),
+    path.join(process.cwd(), 'logs', 'conversations', `${phoneArg}.log`)
+];
 
-if (!fs.existsSync(targetFile)) {
+const targetFile = candidates.find(filePath => fs.existsSync(filePath));
+
+if (!targetFile) {
     console.error(`Historico nao encontrado para ${phoneArg}.`);
     process.exit(1);
 }

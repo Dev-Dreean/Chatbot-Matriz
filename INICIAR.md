@@ -49,6 +49,19 @@ npm run dev
    - Verify Token: o mesmo valor de `WEBHOOK_VERIFY_TOKEN`
 3. Teste enviando uma mensagem para o numero oficial da Matriz.
 
+## Pasta local
+
+Os arquivos locais do bot ficam em:
+
+`C:\Sistemas\Chatbot-Matriz\Banco de dados`
+
+Estrutura principal:
+
+- `ano\colaboradores\Nome - Telefone\documentos`
+- `ano\colaboradores\Nome - Telefone\historico`
+- `ano\colaboradores\Nome - Telefone\relatorios`
+- `historico\por-telefone`
+
 ## Observacao importante
 
 O numero oficial nao fica definido no codigo. O que controla o envio e o `WHATSAPP_PHONE_NUMBER_ID` configurado no `.env`.

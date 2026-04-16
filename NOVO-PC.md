@@ -16,6 +16,7 @@
    - `WEBHOOK_VERIFY_TOKEN`
    - `PORT`
    - `DATABASE_URL`, se usar banco
+   - `LOCAL_DATABASE_ROOT`, se quiser mudar a pasta local padrao
 5. Valide com `npm run config:check`.
 6. Inicie com `start.bat` ou `npm run launch`.
 
@@ -30,6 +31,19 @@ Numero esperado:
 Observacao:
 
 - No `.env`, use o `WHATSAPP_PHONE_NUMBER_ID` da Matriz no painel da Meta (nao usar o numero de telefone nesse campo).
+
+## Estrutura local
+
+O armazenamento local padrao agora fica em:
+
+`C:\Sistemas\Chatbot-Matriz\Banco de dados`
+
+Organizacao esperada:
+
+- `ano\colaboradores\Nome - Telefone\documentos`
+- `ano\colaboradores\Nome - Telefone\historico`
+- `ano\colaboradores\Nome - Telefone\relatorios`
+- `historico\por-telefone`
 
 ## Se quiser manter dados locais
 
