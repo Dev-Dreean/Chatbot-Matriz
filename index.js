@@ -289,26 +289,16 @@ function resolveMainMenuSelection(value) {
     const normalized = normalizeSelectionText(value);
 
     if (!normalized) return null;
-    if (normalized === '1' || normalized.includes('cadastros') || normalized.includes('pagamentos')) return '1';
-    if (normalized === '2' || normalized.includes('recrutamento') || normalized.includes('selecao')) return '2';
-    if (normalized === '3' || normalized.includes('atestados')) return '3';
-    if (normalized === '4' || normalized.includes('enviar folha ponto') || /\bponto\b/.test(normalized)) return '4';
-    if (normalized === '5' || normalized.includes('uniformes') || normalized.includes('uniforme')) return '5';
-    if (normalized === '6' || normalized.includes('rescisao')) return '6';
-    if (normalized === '7' || normalized.includes('ferias')) return '7';
-    if (normalized === '8' || normalized.includes('falar com atendente') || normalized.includes('atendente')) return '8';
-    if (normalized === '9' || normalized.includes('termo de ciencia') || normalized.includes('termo')) return '9';
-
-    return null;
-}
-
-function resolvePontoSelection(value) {
-    const normalized = normalizeSelectionText(value);
-
-    if (!normalized) return null;
-    if (normalized === '1' || normalized.includes('enviar folha ponto') || normalized.includes('folha ponto')) return 1;
-    if (normalized === '2' || normalized.includes('ponto eletronico')) return 2;
-    if (normalized === '3' || normalized.includes('ponto manual')) return 3;
+    // 9 Categorias Novas
+    if (normalized === '1' || normalized.includes('folha ponto')) return 'CAT_FOLHA_PONTO';
+    if (normalized === '2' || normalized.includes('contracheque')) return 'CAT_CONTRACHEQUE';
+    if (normalized === '3' || normalized.includes('ferias')) return 'CAT_FERIAS';
+    if (normalized === '4' || normalized.includes('atestados')) return 'CAT_ATESTADOS';
+    if (normalized === '5' || normalized.includes('rescisao')) return 'CAT_RESCISAO';
+    if (normalized === '6' || normalized.includes('vale alimentacao') || normalized.includes('alimentacao')) return 'CAT_VALE_ALIMENTACAO';
+    if (normalized === '7' || normalized.includes('vale transporte') || normalized.includes('transporte')) return 'CAT_VALE_TRANSPORTE';
+    if (normalized === '8' || normalized.includes('admissao')) return 'CAT_ADMISSAO';
+    if (normalized === '9' || normalized.includes('uniforme')) return 'CAT_UNIFORME';
 
     return null;
 }
@@ -428,61 +418,63 @@ const MAIN_MENU = (name = 'Colega') => {
 
 function getMainMenuRows() {
     return [
-        { id: 'MENU_1_CADASTROS', title: 'Cadastros', description: 'Pagamentos e cadastro' },
-        { id: 'MENU_2_RECRUTAMENTO', title: 'Recrutamento', description: 'Selecao e processo seletivo' },
-        { id: 'MENU_3_ATESTADOS', title: 'Atestados', description: 'Procedimento de envio' },
-        { id: 'MENU_4_PONTO', title: 'Ponto', description: 'Envio e duvidas' },
-        { id: 'MENU_5_UNIFORMES', title: 'Uniformes', description: 'Duvidas sobre uniforme' },
-        { id: 'MENU_6_RESCISAO', title: 'Rescisao', description: 'Informacoes de desligamento' },
-        { id: 'MENU_7_FERIAS', title: 'Ferias', description: 'Duvidas sobre ferias' },
-        { id: 'MENU_8_ATENDENTE', title: 'Falar com atendente', description: 'Numeros dos atendentes' }
+        { id: 'CAT_FOLHA_PONTO', title: '📋 Folha Ponto', description: 'Envio e dúvidas' },
+        { id: 'CAT_CONTRACHEQUE', title: '💰 Contracheque', description: 'Envio e dúvidas' },
+        { id: 'CAT_FERIAS', title: '🌴 Férias', description: 'Aviso, recibo e dúvidas' },
+        { id: 'CAT_ATESTADOS', title: '🏥 Atestados Médicos', description: 'Envio e dúvidas' },
+        { id: 'CAT_RESCISAO', title: '🚪 Rescisão', description: 'Documentos e dúvidas' },
+        { id: 'CAT_VALE_ALIMENTACAO', title: '🍽️ Vale Alimentação', description: 'Perda e comprovante' },
+        { id: 'CAT_VALE_TRANSPORTE', title: '🚌 Vale Transporte', description: 'Perda e comprovante' },
+        { id: 'CAT_ADMISSAO', title: '📝 Admissão', description: 'Documentos e marcações' },
+        { id: 'CAT_UNIFORME', title: '👕 Uniforme', description: 'Recibo e trocas' }
     ];
 }
 
-const CONTATOS = {
-    1: `📋 *ALTERAÇÃO CADASTRAL/PAGAMENTOS*\n\n` +
-        `📧 suporteadmpr@plansul.com.br\n` +
-        `📞 (41) 3087-2573\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    2: `🤝 *PROCESSO SELETIVO*\n\n` +
-        `📧 processoseletivo@plansul.com.br\n` +
-        `📞 (41) 99148-9677\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    3: `🏥 *ATESTADOS*\n\n` +
-        `📧 rhfilialcolombo@plansul.com.br\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    5: `⏱️ *PONTO ELETRÔNICO*\n\n` +
-        `📞 (41) 99259-3700\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    6: `⏱️ *PONTO MANUAL*\n\n` +
-        `📞 (41) 3087-2570\n` +
-        `📧 folhaponto.750@plansul.com.br\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    7: `👕 *UNIFORMES*\n\n` +
-        `📞 (41) 99113-5703\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    8: `🌴 *FÉRIAS*\n\n` +
-        `📧 auxiliarrh.750@plansul.com.br\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    9: `🧑‍💻 *FALAR COM ATENDENTE*\n\n` +
-        `CADASTRO & PAGAMENTOS: (41) 3087-2573\n` +
-        `PROCESSO SELETIVO: (41) 99148-9677\n` +
-        `PONTO ELETRÔNICO: (41) 99259-3700\n` +
-        `UNIFORMES: (41) 99113-5703\n\n` +
-        `🔙 Digite *menu* para voltar`,
-    10: `📝 *TERMO DE CIÊNCIA*\n\n` +
-        `Envie o termo assinado em PDF para registro.\n\n` +
-        `🔙 Digite *menu* para voltar`
+// ========== INFORMAÇÕES POR CATEGORIA (PLACEHOLDERS E TEXTOS) ==========
+const CATEGORY_INFO = {
+    // Folha Ponto
+    FP_DUVIDAS: `📋 *FOLHA PONTO - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Contracheque
+    CC_DUVIDAS: `💰 *CONTRACHEQUE - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Férias
+    FER_DUVIDAS: `🌴 *FÉRIAS - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Atestados
+    AT_DUVIDAS: `🏥 *ATESTADOS MÉDICOS - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Vale Alimentação
+    VA_PERDA: `🍽️ *VALE ALIMENTAÇÃO - COMUNICAR PERDA*\n\n⏳ *PLACEHOLDER - Contacte o RH para comunicar a perda*\n\n🔙 Digite *menu* para voltar`,
+    VA_DUVIDAS: `🍽️ *VALE ALIMENTAÇÃO - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Vale Transporte
+    VT_PERDA: `🚌 *VALE TRANSPORTE - COMUNICAR PERDA*\n\n⏳ *PLACEHOLDER - Contacte o RH para comunicar a perda*\n\n🔙 Digite *menu* para voltar`,
+    VT_DUVIDAS: `🚌 *VALE TRANSPORTE - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Admissão
+    ADM_EXAME: `📝 *ADMISSÃO - MARCAÇÃO EXAME ADMISSIONAL*\n\n⏳ *PLACEHOLDER - Será marcado pela empresa*\n\n🔙 Digite *menu* para voltar`,
+    ADM_DUVIDAS: `📝 *ADMISSÃO - DÚVIDAS*\n\n⏳ *PLACEHOLDER*\n\n🔙 Digite *menu* para voltar`,
+    
+    // Uniforme
+    UNI_TROCA: `👕 *UNIFORME - TROCA*\n\n⏳ *PLACEHOLDER - Contacte o RH para solicitar troca*\n\n🔙 Digite *menu* para voltar`,
 };
 
-const RESCISAO_SUBMENU = (name = 'Colega') =>
-    `🚪 *RESCISÃO*\n\n` +
-    `${formatName(name)}, para solicitar seu desligamento, escolha uma das opções abaixo:\n\n` +
-    `1️⃣ Aviso prévio *(30 dias trabalhados)*\n` +
-    `2️⃣ Aviso prévio *sem cumprimento*\n` +
-    `3️⃣ Interrupção do cumprimento do *aviso prévio trabalhado*\n` +
-    `4️⃣ Término de contrato *(30 dias ou 90 dias)*\n\n` +
-    `🔙 Digite *menu* para voltar`;
+// ========== MAPEAMENTO DE DOCUMENTOS (categoria → destino de armazenamento) ==========
+const DOCFLOW_CONFIG = {
+    fp_manual:          { label: 'Folha Ponto Manual',           subPath: 'FOLHA_MANUAL' },
+    cc_envio:           { label: 'Contracheque',                 subPath: 'CONTRACHEQUE' },
+    ferias_aviso:       { label: 'Aviso de Férias',              subPath: 'FERIAS/AVISO' },
+    ferias_recibo:      { label: 'Recibo de Férias',             subPath: 'FERIAS/RECIBO' },
+    atestados_envio:    { label: 'Atestado Médico',              subPath: 'ATESTADOS' },
+    rescisao_aviso:     { label: 'Aviso Prévio Rescisão',        subPath: 'RESCISAO/AVISO' },
+    rescisao_rct:       { label: 'RCT Assinada',                 subPath: 'RESCISAO/RCT' },
+    va_comprovante:     { label: 'Comprovante Vale Alimentação', subPath: 'VALE_ALIMENTACAO' },
+    vt_comprovante:     { label: 'Comprovante Vale Transporte',  subPath: 'VALE_TRANSPORTE' },
+    admissao_contrato:  { label: 'Contrato Assinado',            subPath: 'ADMISSAO/CONTRATO' },
+    admissao_cracha:    { label: 'Comprovante Crachá',           subPath: 'ADMISSAO/CRACHA' },
+    uniforme_recibo:    { label: 'Recibo Uniforme',              subPath: 'UNIFORME' },
+};
 
 const RESCISAO_TEXTS = {
     1: () =>
@@ -525,7 +517,7 @@ const RESCISAO_TEXTS = {
 };
 
 const INVALID_RESCISAO_OPTION_TEXT = (name = 'Colega') =>
-    `❌ *Opção inválida, ${formatName(name)}!* Escolha uma opção de 1 a 4 para Rescisão, ou digite *menu* para voltar.`;
+    `❌ *Opção inválida, ${formatName(name)}!* Use a lista de opções de Rescisão ou digite *menu* para voltar.`;
 
 // ========== FUNÇÕES DE MENSAGENS INTERATIVAS ==========
 /**
@@ -578,20 +570,11 @@ async function sendMainMenuList(to, userName, context = {}) {
     const bodyText = 'Escolha uma das opções:';
     const buttonText = 'Opções';
 
-    // Menu com 10 opções em uma única seção (sem 'Outros serviços')
+    // Menu com 9 categorias
     const sections = [
         {
             title: 'Menu',
-            rows: [
-                { id: 'MENU_1_CADASTROS', title: '📋 Cadastros', description: '& Pagamentos' },
-                { id: 'MENU_2_RECRUTAMENTO', title: '🤝 Recrutamento', description: '& Seleção' },
-                { id: 'MENU_3_ATESTADOS', title: '🏥 Atestados', description: 'Procedimento de envio' },
-                { id: 'MENU_4_PONTO', title: '⏱️ Ponto', description: 'Acesso a envio e dúvidas' },
-                { id: 'MENU_5_UNIFORMES', title: '👕 Uniformes', description: 'Fale sobre o uniforme' },
-                { id: 'MENU_6_RESCISAO', title: '🚪 Rescisão', description: 'Informações sobre rescisão' },
-                { id: 'MENU_7_FERIAS', title: '🌴 Férias', description: 'Dúvidas sobre férias' },
-                { id: 'MENU_8_ATENDENTE', title: '🧑‍💻 Falar com atend.', description: 'Numeros dos atendente' }
-            ]
+            rows: getMainMenuRows()
         }
     ];
 
@@ -608,7 +591,17 @@ async function sendMainMenuList(to, userName, context = {}) {
     // Fallback para o menu em texto, se a lista interativa falhar
     if (!ok) {
         logEvento({ tipo: 'WARN', mensagem: 'Falha ao enviar lista interativa, usando fallback de texto', telefone: cleanPhone(to) });
-        const menuText = MAIN_MENU(userName);
+        const menuText = '📋 *MENU PRINCIPAL*\n\n' +
+            '1️⃣ Folha Ponto\n' +
+            '2️⃣ Contracheque\n' +
+            '3️⃣ Férias\n' +
+            '4️⃣ Atestados Médicos\n' +
+            '5️⃣ Rescisão\n' +
+            '6️⃣ Vale Alimentação\n' +
+            '7️⃣ Vale Transporte\n' +
+            '8️⃣ Admissão\n' +
+            '9️⃣ Uniforme\n\n' +
+            'Escolha uma opção digitando o número ou selecionando da lista:';
         return queueMessage(to, menuText, 2, context);
     }
 
@@ -650,22 +643,21 @@ async function sendInfoScreen(to, userName, text, currentMenuId, context = {}) {
 }
 
 // Sub-menu para escolher tipo de Ponto (Eletrônico ou Manual)
-async function sendPontoSubMenu(to, userName, context = {}) {
+async function sendRescisaoSubMenu(to, userName, context = {}) {
     const name = formatName(userName) || 'colaborador(a)';
 
-    // Mantém o usuário no contexto do submenu para respostas por texto (fallback)
-    await stateManager.setState(to, { step: 'ponto_submenu', userName });
+    await stateManager.setState(to, { step: 'await_rescisao_option', userName, welcomeSent: true });
 
-    const bodyText = `${name}, qual opção de ponto você deseja?`;
+    const bodyText = `${name}, escolha a orientação de rescisão que você precisa:`;
     const buttonText = 'Escolher';
-
     const sections = [
         {
-            title: 'Ponto',
+            title: 'Rescisao',
             rows: [
-                { id: 'PONTO_ENVIAR_FOLHA', title: '📤 Enviar folha ponto', description: 'Enviar sua folha ponto' },
-                { id: 'PONTO_ELETRONICO', title: '📱 Ponto eletronico', description: 'Tirar duvidas' },
-                { id: 'PONTO_MANUAL', title: '✍️ Ponto manual', description: 'Tirar duvidas' }
+                { id: 'RESCISAO_1', title: 'Aviso previo', description: '30 dias trabalhados' },
+                { id: 'RESCISAO_2', title: 'Sem cumprimento', description: 'Aviso previo sem cumprir' },
+                { id: 'RESCISAO_3', title: 'Interromper aviso', description: 'Parar aviso trabalhado' },
+                { id: 'RESCISAO_4', title: 'Termino de contrato', description: 'Contrato de 30 ou 90 dias' }
             ]
         }
     ];
@@ -681,10 +673,9 @@ async function sendPontoSubMenu(to, userName, context = {}) {
     );
 
     if (!ok) {
-        // Fallback texto
         await queueMessage(
             to,
-            `${name}, escolha uma opção de ponto:\n\n1️⃣ Enviar folha ponto\n2️⃣ Ponto eletronico\n3️⃣ Ponto manual\n\nDigite 1, 2 ou 3:`,
+            `${name}, escolha uma opção de rescisão:\n\n1️⃣ Aviso previo (30 dias trabalhados)\n2️⃣ Aviso previo sem cumprimento\n3️⃣ Interrupção do aviso trabalhado\n4️⃣ Termino de contrato\n\nDigite 1, 2, 3 ou 4:`,
             2,
             context
         );
@@ -692,20 +683,252 @@ async function sendPontoSubMenu(to, userName, context = {}) {
 }
 
 // Envia botões para confirmar substituição de arquivo (SIM / NÃO)
+function resolveRescisaoSelection(value) {
+    const normalized = normalizeSelectionText(value);
+
+    if (!normalized) return null;
+    if (normalized === '1' || normalized.includes('aviso previo') || normalized.includes('30 dias')) return 1;
+    if (normalized === '2' || normalized.includes('sem cumprimento') || normalized.includes('nao irei cumprir')) return 2;
+    if (normalized === '3' || normalized.includes('interromper aviso') || normalized.includes('interrupcao do aviso')) return 3;
+    if (normalized === '4' || normalized.includes('termino de contrato') || normalized.includes('contrato')) return 4;
+
+    return null;
+}
+
+async function sendPontoSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+
+    await stateManager.setState(to, { step: 'ponto_submenu', userName });
+
+    const bodyText = `${name}, qual opcao de ponto voce deseja?`;
+    const buttons = [
+        { id: 'PONTO_ENVIAR_FOLHA', title: 'Enviar folha' },
+        { id: 'PONTO_ELETRONICO', title: 'Ponto eletronico' },
+        { id: 'PONTO_MANUAL', title: 'Ponto manual' }
+    ];
+
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+
+    const fallbackOk = await sendWhatsAppInteractiveList(
+        to,
+        null,
+        bodyText,
+        null,
+        'Escolher',
+        [{
+            title: 'Ponto',
+            rows: [
+                { id: 'PONTO_ENVIAR_FOLHA', title: 'Enviar folha ponto', description: 'Enviar sua folha ponto' },
+                { id: 'PONTO_ELETRONICO', title: 'Ponto eletronico', description: 'Tirar duvidas' },
+                { id: 'PONTO_MANUAL', title: 'Ponto manual', description: 'Tirar duvidas' }
+            ]
+        }],
+        context
+    );
+
+    if (!fallbackOk) {
+        await queueMessage(
+            to,
+            `${name}, escolha uma opcao de ponto:\n\n- Enviar folha ponto\n- Ponto eletronico\n- Ponto manual\n\nSe preferir, responda com o nome da opcao desejada.`,
+            2,
+            context
+        );
+    }
+}
+
+async function sendRescisaoSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+
+    await stateManager.setState(to, { step: 'await_rescisao_option_primary', userName, welcomeSent: true });
+
+    const bodyText = `${name}, escolha a orientacao de rescisao que voce precisa:`;
+    const buttons = [
+        { id: 'RESCISAO_1', title: 'Aviso 30 dias' },
+        { id: 'RESCISAO_2', title: 'Sem cumprir' },
+        { id: 'RESCISAO_MORE', title: 'Mais opcoes' }
+    ];
+
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+
+    const fallbackOk = await sendWhatsAppInteractiveList(
+        to,
+        null,
+        bodyText,
+        null,
+        'Escolher',
+        [{
+            title: 'Rescisao',
+            rows: [
+                { id: 'RESCISAO_1', title: 'Aviso previo', description: '30 dias trabalhados' },
+                { id: 'RESCISAO_2', title: 'Sem cumprimento', description: 'Aviso previo sem cumprir' },
+                { id: 'RESCISAO_3', title: 'Interromper aviso', description: 'Parar aviso trabalhado' },
+                { id: 'RESCISAO_4', title: 'Termino de contrato', description: 'Contrato de 30 ou 90 dias' }
+            ]
+        }],
+        context
+    );
+
+    if (!fallbackOk) {
+        await queueMessage(
+            to,
+            `${name}, escolha uma opcao de rescisao:\n\n- Aviso previo (30 dias trabalhados)\n- Aviso previo sem cumprimento\n- Interrupcao do aviso trabalhado\n- Termino de contrato\n\nSe preferir, responda com o nome da orientacao desejada.`,
+            2,
+            context
+        );
+    }
+}
+
 async function sendConfirmReplaceButtons(to, userName, month, context = {}) {
     const bodyText = `⚠️ ${formatName(userName)}, você já enviou a folha de ${month} ✅\nQuer substituir?`;
     const footer = '';
     const buttons = [
-        { id: 'REPLACE_YES', title: '✅ 1 - SIM' },
-        { id: 'REPLACE_NO', title: '❌ 0 - NÃO' }
+        { id: 'REPLACE_YES', title: 'Sim, substituir' },
+        { id: 'REPLACE_NO', title: 'Nao, manter' }
     ];
 
     const ok = await sendWhatsAppInteractiveButtons(to, bodyText, footer, buttons, context);
     if (!ok) {
         // Fallback em texto se botões não funcionarem
         await queueMessage(to,
-            `⚠️ ${formatName(userName)}, você já enviou a folha de ${month} ✅\nQuer substituir?\n\n✅ 1 - SIM\n❌ 0 - NÃO\n\n🔙 Digite *menu* para voltar`, 2, context);
+            `⚠️ ${formatName(userName)}, você já enviou a folha de ${month} ✅\nQuer substituir?\n\nResponda *sim* para substituir ou *nao* para manter o arquivo atual.\n\n🔙 Digite *menu* para voltar`, 2, context);
     }
+}
+
+// ========== 9 NOVOS SUB-MENUS POR CATEGORIA ==========
+async function sendFolhaPontoSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'folha_ponto_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'FP_ENVIO', title: 'Enviar Folha' },
+        { id: 'FP_DUVIDAS', title: 'Dúvidas' },
+        { id: 'FP_MANUAL', title: 'Folha Manual' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de folha ponto:\n\n1️⃣ Enviar Folha\n2️⃣ Dúvidas\n3️⃣ Folha Manual\n\nDigite 1, 2ou 3:`, 2, context);
+}
+
+async function sendContrachequeSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'contracheque_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'CC_DUVIDAS', title: 'Dúvidas' },
+        { id: 'CC_ENVIO', title: 'Enviar' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de contracheque:\n\n1️⃣ Dúvidas\n2️⃣ Enviar\n\nDigite 1 ou 2:`, 2, context);
+}
+
+async function sendFeriasSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'ferias_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'FER_AVISO', title: 'Aviso' },
+        { id: 'FER_RECIBO', title: 'Recibo' },
+        { id: 'FER_DUVIDAS', title: 'Dúvidas' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de férias:\n\n1️⃣ Aviso\n2️⃣ Recibo\n3️⃣ Dúvidas\n\nDigite 1, 2 ou 3:`, 2, context);
+}
+
+async function sendAtestadosSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'atestados_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'AT_ENVIO', title: 'Enviar' },
+        { id: 'AT_DUVIDAS', title: 'Dúvidas' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de atestados:\n\n1️⃣ Enviar\n2️⃣ Dúvidas\n\nDigite 1 ou 2:`, 2, context);
+}
+
+async function sendRescisaoDuvidasSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'await_rescisao_duvidas', userName, welcomeSent: true });
+    const bodyText = `${name}, escolha a orientação de rescisão que você precisa:`;
+    const sections = [{ title: 'Rescisão', rows: [
+        { id: 'RESD_1', title: 'Aviso prévio', description: '30 dias trabalhados' },
+        { id: 'RESD_2', title: 'Sem cumprimento', description: 'Aviso prévio sem cumprir' },
+        { id: 'RESD_3', title: 'Interromper aviso', description: 'Parar aviso trabalhado' },
+        { id: 'RESD_4', title: 'Término de contrato', description: 'Contrato de 30 ou 90 dias' }
+    ]}];
+    const ok = await sendWhatsAppInteractiveList(to, null, bodyText, null, 'Escolher', sections, context);
+    if (!ok) {
+        await queueMessage(to, `${name}, escolha uma opção de rescisão:\n\n1️⃣ Aviso prévio (30 dias)\n2️⃣ Aviso prévio sem cumprimento\n3️⃣ Interrupção do aviso trabalhado\n4️⃣ Término de contrato\n\nDigite 1, 2, 3 ou 4:`, 2, context);
+    }
+}
+
+async function sendValeAlimentacaoSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'vale_alimentacao_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'VA_PERDA', title: 'Comunicar Perda' },
+        { id: 'VA_COMPROVANTE', title: 'Comprovante' },
+        { id: 'VA_DUVIDAS', title: 'Dúvidas' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de vale alimentação:\n\n1️⃣ Comunicar Perda\n2️⃣ Comprovante\n3️⃣ Dúvidas\n\nDigite 1, 2 ou 3:`, 2, context);
+}
+
+async function sendValeTransporteSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'vale_transporte_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'VT_PERDA', title: 'Comunicar Perda' },
+        { id: 'VT_COMPROVANTE', title: 'Comprovante' },
+        { id: 'VT_DUVIDAS', title: 'Dúvidas' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de vale transporte:\n\n1️⃣ Comunicar Perda\n2️⃣ Comprovante\n3️⃣ Dúvidas\n\nDigite 1, 2 ou 3:`, 2, context);
+}
+
+async function sendAdmissaoSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'admissao_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const sections = [{ title: 'Admissão', rows: [
+        { id: 'ADM_CONTRATO', title: 'Contrato Assinado', description: 'Enviar contrato' },
+        { id: 'ADM_CRACHA', title: 'Comprovante Crachá', description: 'Enviar comprovante' },
+        { id: 'ADM_EXAME', title: 'Marcação Exame', description: 'Marcar exame admissional' },
+        { id: 'ADM_DUVIDAS', title: 'Dúvidas', description: 'Tirar dúvidas' }
+    ]}];
+    const ok = await sendWhatsAppInteractiveList(to, null, bodyText, null, 'Escolher', sections, context);
+    if (!ok) {
+        await queueMessage(to, `${name}, escolha uma opção de admissão:\n\n1️⃣ Contrato Assinado\n2️⃣ Comprovante Crachá\n3️⃣ Marcação Exame\n4️⃣ Dúvidas\n\nDigite 1, 2, 3 ou 4:`, 2, context);
+    }
+}
+
+async function sendUniformeSubMenu(to, userName, context = {}) {
+    const name = formatName(userName) || 'colaborador(a)';
+    await stateManager.setState(to, { step: 'uniforme_submenu', userName });
+    const bodyText = `${name}, o que você deseja?`;
+    const buttons = [
+        { id: 'UNI_RECIBO', title: 'Enviar Recibo' },
+        { id: 'UNI_TROCA', title: 'Troca' }
+    ];
+    const ok = await sendWhatsAppInteractiveButtons(to, bodyText, '', buttons, context);
+    if (ok) return;
+    await queueMessage(to, `${name}, escolha uma opção de uniforme:\n\n1️⃣ Enviar Recibo\n2️⃣ Troca\n\nDigite 1 ou 2:`, 2, context);
+}
+
+async function handleGenericDocumentUpload(fromJid, userName, category, context = {}) {
+    const label = DOCFLOW_CONFIG[category]?.label || 'Documento';
+    const phone = cleanPhone(fromJid);
+    await stateManager.setState(fromJid, { step: 'await_document', category, label, userName, welcomeSent: true });
+    return queueMessage(fromJid, `📤 ${formatName(userName)}, envie o *PDF* do *${label}*:\n\n🔙 Digite *menu* para voltar`, 2, context);
 }
 
 // ========== FUNÇÃO DE TRATAMENTO DE MENSAGENS ==========
@@ -756,71 +979,121 @@ async function handleIncomingMessage({ from, body, pushName, messageId, type, in
             return;
         }
 
-        // Usuário escolheu uma opção da LISTA → mapeia para o número correspondente
+        // ===== NOVO MAPEAMENTO: 9 CATEGORIAS + SUB-OPÇÕES =====
         if (type === 'interactive_list' && interactiveId) {
-            // Mapeamento do menu principal (10 itens)
-            const mapMenu = {
-                MENU_1_CADASTROS: '1',
-                MENU_2_RECRUTAMENTO: '2',
-                MENU_3_ATESTADOS: '3',
-                MENU_5_UNIFORMES: '5',
-                MENU_6_RESCISAO: '6',
-                MENU_7_FERIAS: '7',
-                MENU_8_ATENDENTE: '8'
+            // Menu principal (9 categorias)
+            const mainCategoryMap = {
+                CAT_FOLHA_PONTO: async () => sendFolhaPontoSubMenu(fromJid, userName, context),
+                CAT_CONTRACHEQUE: async () => sendContrachequeSubMenu(fromJid, userName, context),
+                CAT_FERIAS: async () => sendFeriasSubMenu(fromJid, userName, context),
+                CAT_ATESTADOS: async () => sendAtestadosSubMenu(fromJid, userName, context),
+                CAT_RESCISAO: async () => sendRescisaoSubMenu(fromJid, userName, context),
+                CAT_VALE_ALIMENTACAO: async () => sendValeAlimentacaoSubMenu(fromJid, userName, context),
+                CAT_VALE_TRANSPORTE: async () => sendValeTransporteSubMenu(fromJid, userName, context),
+                CAT_ADMISSAO: async () => sendAdmissaoSubMenu(fromJid, userName, context),
+                CAT_UNIFORME: async () => sendUniformeSubMenu(fromJid, userName, context),
+                MENU_HOME: async () => { await stateManager.clearState(fromJid); await sendMainMenuList(fromJid, userName, context); }
             };
 
-            if (interactiveId === 'MENU_HOME') {
+            // Sub-opções de Folha Ponto
+            if (interactiveId === 'FP_ENVIO') return handleFolhaPonto(fromJid, userName, context);
+            if (interactiveId === 'FP_DUVIDAS') {
                 await stateManager.clearState(fromJid);
-                await sendMainMenuList(fromJid, userName, context);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.FP_DUVIDAS, 'CAT_FOLHA_PONTO', context);
+            }
+            if (interactiveId === 'FP_MANUAL') return handleGenericDocumentUpload(fromJid, userName, 'fp_manual', context);
+
+            // Sub-opções de Contracheque
+            if (interactiveId === 'CC_DUVIDAS') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.CC_DUVIDAS, 'CAT_CONTRACHEQUE', context);
+            }
+            if (interactiveId === 'CC_ENVIO') return handleGenericDocumentUpload(fromJid, userName, 'cc_envio', context);
+
+            // Sub-opções de Férias
+            if (interactiveId === 'FER_AVISO') return handleGenericDocumentUpload(fromJid, userName, 'ferias_aviso', context);
+            if (interactiveId === 'FER_RECIBO') return handleGenericDocumentUpload(fromJid, userName, 'ferias_recibo', context);
+            if (interactiveId === 'FER_DUVIDAS') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.FER_DUVIDAS, 'CAT_FERIAS', context);
+            }
+
+            // Sub-opções de Atestados
+            if (interactiveId === 'AT_ENVIO') return handleGenericDocumentUpload(fromJid, userName, 'atestados_envio', context);
+            if (interactiveId === 'AT_DUVIDAS') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.AT_DUVIDAS, 'CAT_ATESTADOS', context);
+            }
+
+            // Sub-opções de Rescisão
+            if (interactiveId === 'RES_AVISO') return handleGenericDocumentUpload(fromJid, userName, 'rescisao_aviso', context);
+            if (interactiveId === 'RES_RCT') return handleGenericDocumentUpload(fromJid, userName, 'rescisao_rct', context);
+            if (interactiveId === 'RES_DUVIDAS') return sendRescisaoDuvidasSubMenu(fromJid, userName, context);
+
+            // Respostas de Rescisão Dúvidas (orientações)
+            if (interactiveId === 'RESD_1') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, RESCISAO_TEXTS[1](userName), 'CAT_RESCISAO', context);
+            }
+            if (interactiveId === 'RESD_2') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, RESCISAO_TEXTS[2](userName), 'CAT_RESCISAO', context);
+            }
+            if (interactiveId === 'RESD_3') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, RESCISAO_TEXTS[3](userName), 'CAT_RESCISAO', context);
+            }
+            if (interactiveId === 'RESD_4') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, RESCISAO_TEXTS[4](userName), 'CAT_RESCISAO', context);
+            }
+
+            // Sub-opções de Vale Alimentação
+            if (interactiveId === 'VA_PERDA') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VA_PERDA, 'CAT_VALE_ALIMENTACAO', context);
+            }
+            if (interactiveId === 'VA_COMPROVANTE') return handleGenericDocumentUpload(fromJid, userName, 'va_comprovante', context);
+            if (interactiveId === 'VA_DUVIDAS') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VA_DUVIDAS, 'CAT_VALE_ALIMENTACAO', context);
+            }
+
+            // Sub-opções de Vale Transporte
+            if (interactiveId === 'VT_PERDA') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VT_PERDA, 'CAT_VALE_TRANSPORTE', context);
+            }
+            if (interactiveId === 'VT_COMPROVANTE') return handleGenericDocumentUpload(fromJid, userName, 'vt_comprovante', context);
+            if (interactiveId === 'VT_DUVIDAS') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VT_DUVIDAS, 'CAT_VALE_TRANSPORTE', context);
+            }
+
+            // Sub-opções de Admissão
+            if (interactiveId === 'ADM_CONTRATO') return handleGenericDocumentUpload(fromJid, userName, 'admissao_contrato', context);
+            if (interactiveId === 'ADM_CRACHA') return handleGenericDocumentUpload(fromJid, userName, 'admissao_cracha', context);
+            if (interactiveId === 'ADM_EXAME') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.ADM_EXAME, 'CAT_ADMISSAO', context);
+            }
+            if (interactiveId === 'ADM_DUVIDAS') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.ADM_DUVIDAS, 'CAT_ADMISSAO', context);
+            }
+
+            // Sub-opções de Uniforme
+            if (interactiveId === 'UNI_RECIBO') return handleGenericDocumentUpload(fromJid, userName, 'uniforme_recibo', context);
+            if (interactiveId === 'UNI_TROCA') {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.UNI_TROCA, 'CAT_UNIFORME', context);
+            }
+
+            // Menu principal (9 categorias) - via handler map
+            if (mainCategoryMap[interactiveId]) {
+                await mainCategoryMap[interactiveId]();
                 return;
             }
-
-            if (interactiveId === 'MENU_9_TERMO') {
-                await stateManager.clearState(fromJid);
-                await sendInfoScreen(fromJid, userName, 'Essa opcao foi removida do atendimento.', 'MENU_HOME', context);
-                return;
-            }
-
-            // Se usuário escolheu Ponto no menu principal, abrir sub-menu
-            if (interactiveId === 'MENU_4_PONTO') {
-                logEvento({ tipo: 'INTERACTIVE', mensagem: 'Abrindo sub-menu de Ponto', telefone: from });
-                await sendPontoSubMenu(fromJid, userName, context);
-                return;
-            }
-
-            // Sub-menu de Ponto: Enviar folha, Eletrônico ou Manual
-            if (interactiveId === 'PONTO_ENVIAR_FOLHA') {
-                logEvento({ tipo: 'INTERACTIVE', mensagem: 'Enviar folha ponto selecionado', telefone: from });
-                return handleFolhaPonto(fromJid, userName, context);
-            }
-
-            if (interactiveId === 'PONTO_ELETRONICO') {
-                logEvento({ tipo: 'INTERACTIVE', mensagem: 'Ponto Eletrônico selecionado', telefone: from });
-                await stateManager.clearState(fromJid);
-                return sendInfoScreen(fromJid, userName, CONTATOS[5], 'MENU_4_PONTO', context);
-            }
-
-            if (interactiveId === 'PONTO_MANUAL') {
-                logEvento({ tipo: 'INTERACTIVE', mensagem: 'Ponto Manual selecionado', telefone: from });
-                await stateManager.clearState(fromJid);
-                return sendInfoScreen(fromJid, userName, CONTATOS[6], 'MENU_4_PONTO', context);
-            }
-
-            if (mapMenu[interactiveId]) {
-                logEvento({ tipo: 'INTERACTIVE', mensagem: `Lista: ${interactiveId} → opção ${mapMenu[interactiveId]}`, telefone: from });
-                texto = mapMenu[interactiveId];
-            }
-        }
-
-        const resolvedMainMenuSelection = resolveMainMenuSelection(body || interactiveTitle || texto);
-        if (resolvedMainMenuSelection && (type === 'text' || !interactiveId)) {
-            texto = resolvedMainMenuSelection;
-        }
-
-        if (resolvedMainMenuSelection) {
-            await stateManager.clearState(fromJid);
-            state.step = 'initial';
-            state.welcomeSent = true;
         }
 
         // Se o usuário digitou explicitamente 'ver opcoes' ou 'ver opções', abre a lista
@@ -840,68 +1113,171 @@ async function handleIncomingMessage({ from, body, pushName, messageId, type, in
             return;
         }
 
-        // ===== SUBMENU DE PONTO (fallback textual) =====
-        if (state.step === 'ponto_submenu') {
-            const opcaoPonto = resolvePontoSelection(body || interactiveTitle || texto) || parseInt(texto, 10);
-
-            if (opcaoPonto === 1) {
-                return handleFolhaPonto(fromJid, userName, context);
-            }
-
-            if (opcaoPonto === 2) {
+        // ===== SUB-MENUS POR TEXTO (FALLBACK) =====
+        // Folha Ponto
+        if (state.step === 'folha_ponto_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) return handleFolhaPonto(fromJid, userName, context);
+            if (opcao === 2) {
                 await stateManager.clearState(fromJid);
-                return sendInfoScreen(fromJid, userName, CONTATOS[5], 'MENU_4_PONTO', context);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.FP_DUVIDAS, 'CAT_FOLHA_PONTO', context);
             }
-
-            if (opcaoPonto === 3) {
-                await stateManager.clearState(fromJid);
-                return sendInfoScreen(fromJid, userName, CONTATOS[6], 'MENU_4_PONTO', context);
-            }
-
+            if (opcao === 3) return handleGenericDocumentUpload(fromJid, userName, 'fp_manual', context);
             await queueMessage(fromJid, '❌ Opção inválida. Escolha 1, 2 ou 3.', 2, context);
-            return sendPontoSubMenu(fromJid, userName, context);
+            return sendFolhaPontoSubMenu(fromJid, userName, context);
+        }
+
+        // Contracheque
+        if (state.step === 'contracheque_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.CC_DUVIDAS, 'CAT_CONTRACHEQUE', context);
+            }
+            if (opcao === 2) return handleGenericDocumentUpload(fromJid, userName, 'cc_envio', context);
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1 ou 2.', 2, context);
+            return sendContrachequeSubMenu(fromJid, userName, context);
+        }
+
+        // Férias
+        if (state.step === 'ferias_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) return handleGenericDocumentUpload(fromJid, userName, 'ferias_aviso', context);
+            if (opcao === 2) return handleGenericDocumentUpload(fromJid, userName, 'ferias_recibo', context);
+            if (opcao === 3) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.FER_DUVIDAS, 'CAT_FERIAS', context);
+            }
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1, 2 ou 3.', 2, context);
+            return sendFeriasSubMenu(fromJid, userName, context);
+        }
+
+        // Atestados
+        if (state.step === 'atestados_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) return handleGenericDocumentUpload(fromJid, userName, 'atestados_envio', context);
+            if (opcao === 2) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.AT_DUVIDAS, 'CAT_ATESTADOS', context);
+            }
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1 ou 2.', 2, context);
+            return sendAtestadosSubMenu(fromJid, userName, context);
+        }
+
+        // Vale Alimentação
+        if (state.step === 'vale_alimentacao_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VA_PERDA, 'CAT_VALE_ALIMENTACAO', context);
+            }
+            if (opcao === 2) return handleGenericDocumentUpload(fromJid, userName, 'va_comprovante', context);
+            if (opcao === 3) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VA_DUVIDAS, 'CAT_VALE_ALIMENTACAO', context);
+            }
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1, 2 ou 3.', 2, context);
+            return sendValeAlimentacaoSubMenu(fromJid, userName, context);
+        }
+
+        // Vale Transporte
+        if (state.step === 'vale_transporte_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VT_PERDA, 'CAT_VALE_TRANSPORTE', context);
+            }
+            if (opcao === 2) return handleGenericDocumentUpload(fromJid, userName, 'vt_comprovante', context);
+            if (opcao === 3) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.VT_DUVIDAS, 'CAT_VALE_TRANSPORTE', context);
+            }
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1, 2 ou 3.', 2, context);
+            return sendValeTransporteSubMenu(fromJid, userName, context);
+        }
+
+        // Admissão (lista)
+        if (state.step === 'admissao_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) return handleGenericDocumentUpload(fromJid, userName, 'admissao_contrato', context);
+            if (opcao === 2) return handleGenericDocumentUpload(fromJid, userName, 'admissao_cracha', context);
+            if (opcao === 3) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.ADM_EXAME, 'CAT_ADMISSAO', context);
+            }
+            if (opcao === 4) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.ADM_DUVIDAS, 'CAT_ADMISSAO', context);
+            }
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1, 2, 3 ou 4.', 2, context);
+            return sendAdmissaoSubMenu(fromJid, userName, context);
+        }
+
+        // Uniforme
+        if (state.step === 'uniforme_submenu') {
+            const opcao = parseInt(texto, 10);
+            if (opcao === 1) return handleGenericDocumentUpload(fromJid, userName, 'uniforme_recibo', context);
+            if (opcao === 2) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, CATEGORY_INFO.UNI_TROCA, 'CAT_UNIFORME', context);
+            }
+            await queueMessage(fromJid, '❌ Opção inválida. Escolha 1 ou 2.', 2, context);
+            return sendUniformeSubMenu(fromJid, userName, context);
+        }
+
+        // Rescisão Dúvidas (lista)
+        if (state.step === 'await_rescisao_duvidas') {
+            const opcao = parseInt(texto, 10);
+            if (opcao >= 1 && opcao <= 4) {
+                await stateManager.clearState(fromJid);
+                return sendInfoScreen(fromJid, userName, RESCISAO_TEXTS[opcao](userName), 'CAT_RESCISAO', context);
+            }
+            await queueMessage(fromJid, `❌ Opção inválida, ${formatName(userName)}! Escolha 1, 2, 3 ou 4.`, 2, context);
+            return sendRescisaoDuvidasSubMenu(fromJid, userName, context);
         }
 
         // ===== SE NÃO ESTÁ EM UM FLUXO, INTERPRETA COMO ESCOLHA DE MENU =====
         if (!state.step || state.step === 'initial') {
             const opcao = parseInt(texto, 10);
-
-            // Opção 4: Ponto (abre sub-menu)
-            if (opcao === 4) {
-                return sendPontoSubMenu(fromJid, userName, context);
-            }
-
-            // Opção 6: Rescisão
-            if (opcao === 6) {
-                await stateManager.setState(fromJid, { step: 'await_rescisao_option', userName, welcomeSent: true });
-                return queueMessage(fromJid, RESCISAO_SUBMENU(userName), 2, context);
-            }
-
-            const menuOptionToContact = {
-                1: CONTATOS[1],
-                2: CONTATOS[2],
-                3: CONTATOS[3],
-                5: CONTATOS[7],
-                7: CONTATOS[8],
-                8: CONTATOS[9]
-            };
-            const menuOptionToId = {
-                1: 'MENU_1_CADASTROS',
-                2: 'MENU_2_RECRUTAMENTO',
-                3: 'MENU_3_ATESTADOS',
-                5: 'MENU_5_UNIFORMES',
-                7: 'MENU_7_FERIAS',
-                8: 'MENU_8_ATENDENTE'
+            
+            // Mapear para as 9 categorias por número
+            const categoryMap = {
+                1: 'CAT_FOLHA_PONTO',
+                2: 'CAT_CONTRACHEQUE',
+                3: 'CAT_FERIAS',
+                4: 'CAT_ATESTADOS',
+                5: 'CAT_RESCISAO',
+                6: 'CAT_VALE_ALIMENTACAO',
+                7: 'CAT_VALE_TRANSPORTE',
+                8: 'CAT_ADMISSAO',
+                9: 'CAT_UNIFORME'
             };
 
-            // Outras opções: mostrar contatos
-            const contactMessage = menuOptionToContact[opcao];
-            if (contactMessage) {
-                return sendInfoScreen(fromJid, userName, contactMessage, menuOptionToId[opcao], context);
+            const subMenuMap = {
+                'CAT_FOLHA_PONTO': sendFolhaPontoSubMenu,
+                'CAT_CONTRACHEQUE': sendContrachequeSubMenu,
+                'CAT_FERIAS': sendFeriasSubMenu,
+                'CAT_ATESTADOS': sendAtestadosSubMenu,
+                'CAT_RESCISAO': sendRescisaoSubMenu,
+                'CAT_VALE_ALIMENTACAO': sendValeAlimentacaoSubMenu,
+                'CAT_VALE_TRANSPORTE': sendValeTransporteSubMenu,
+                'CAT_ADMISSAO': sendAdmissaoSubMenu,
+                'CAT_UNIFORME': sendUniformeSubMenu
+            };
+
+            if (categoryMap[opcao]) {
+                const category = categoryMap[opcao];
+                const subMenuFn = subMenuMap[category];
+                if (subMenuFn) return subMenuFn(fromJid, userName, context);
             }
 
-            // Opção inválida ou primeira mensagem:
-            // Verifica se o usuário já recebeu boas-vindas (via stateManager)
+            // Tenta resolver por nome de categoria (text resolution)
+            const resolvedMainMenuSelection = resolveMainMenuSelection(body || interactiveTitle || texto);
+            if (resolvedMainMenuSelection && subMenuMap[resolvedMainMenuSelection]) {
+                return subMenuMap[resolvedMainMenuSelection](fromJid, userName, context);
+            }
+
+            // Opção inválida ou primeira mensagem
             const currentState = await stateManager.getState(fromJid);
             if (currentState.step === 'initial' || !currentState.welcomeSent) {
                 await sendWelcomeWithButton(fromJid, userName, context);
@@ -939,16 +1315,24 @@ async function handleIncomingMessage({ from, body, pushName, messageId, type, in
             return;
         }
 
-        if (state.step === 'await_rescisao_option') {
+        if (state.step === 'await_rescisao_option' || state.step === 'await_rescisao_option_primary' || state.step === 'await_rescisao_option_more') {
             const subOpcao = parseInt(texto, 10);
             const rescisaoMsgFn = RESCISAO_TEXTS[subOpcao];
 
             if (rescisaoMsgFn) {
                 await stateManager.clearState(fromJid);
-                return sendInfoScreen(fromJid, userName, rescisaoMsgFn(userName), 'MENU_6_RESCISAO', context);
+                return sendInfoScreen(fromJid, userName, rescisaoMsgFn(userName), 'CAT_RESCISAO', context);
             }
 
-            return queueMessage(fromJid, INVALID_RESCISAO_OPTION_TEXT(userName), 2, context);
+            await queueMessage(fromJid, `❌ Opção inválida, ${formatName(userName)}! Escolha 1, 2, 3 ou 4.`, 2, context);
+            return sendRescisaoSubMenu(fromJid, userName, context);
+        }
+
+        // ===== NOVO: Aguardando documento genérico (await_document) =====
+        if (state.step === 'await_document') {
+            return queueMessage(fromJid,
+                `📄 Estou aguardando o *PDF* do *${state.label || 'Documento'}*.\n\n` +
+                `Assim que você enviar o arquivo, eu continuo o atendimento.\n\n🔙 Digite *menu* para voltar`, 2, context);
         }
 
         // Implementação mínima para cadastro (await_name) e para salvar relatório
@@ -1224,27 +1608,30 @@ app.post('/webhook', async (req, res) => {
                             return;
                         }
 
-                        // Analisa PDF para número de páginas e texto
-                        const pdfData = await pdfParse(media.buffer);
-                        const numPages = pdfData.numpages || 0;
-                        if (numPages !== 1) {
-                            await appendRelatorioAtividades({ TIMESTAMP: formatDateTime(), TELEFONE: phone, NOME: document.pushName || '', ACAO: 'REJEITADO_PAGINAS', PATH: '' });
-                            await queueMessage(fromJid, '❌ O PDF deve conter apenas 1 página. Envie apenas a folha de ponto em PDF de página única.', 2);
-                            logEvento({ tipo: 'WARN', mensagem: `Arquivo rejeitado: ${numPages} páginas`, telefone: phone });
-                            return;
-                        }
+                        // ===== VALIDAÇÕES ESPECÍFICAS POR CATEGORIA =====
+                        // Para Folha Ponto: validar 1 página + conteúdo
+                        if (state.step === 'await_pdf') {
+                            // Analisa PDF para número de páginas e texto
+                            const pdfData = await pdfParse(media.buffer);
+                            const numPages = pdfData.numpages || 0;
+                            if (numPages !== 1) {
+                                await appendRelatorioAtividades({ TIMESTAMP: formatDateTime(), TELEFONE: phone, NOME: document.pushName || '', ACAO: 'REJEITADO_PAGINAS', PATH: '' });
+                                await queueMessage(fromJid, '❌ O PDF deve conter apenas 1 página. Envie apenas a folha de ponto em PDF de página única.', 2);
+                                logEvento({ tipo: 'WARN', mensagem: `Arquivo rejeitado: ${numPages} páginas`, telefone: phone });
+                                return;
+                            }
 
-                        // Verifica se o conteúdo é referente à folha ponto (heurística de texto)
-                        const text = (pdfData.text || '').toLowerCase();
-                        const isFolhaPonto = text.includes('folha') && text.includes('ponto') || text.includes('folha de ponto') || text.includes('folha ponto');
-                        if (!isFolhaPonto) {
-                            await appendRelatorioAtividades({ TIMESTAMP: formatDateTime(), TELEFONE: phone, NOME: document.pushName || '', ACAO: 'REJEITADO_CONTEUDO', PATH: '' });
-                            await queueMessage(fromJid, '❌ O PDF enviado não parece ser uma folha de ponto. Apenas PDFs de folha de ponto (1 página) são aceitos. Seu arquivo foi recusado e não será salvo.', 2);
-                            logEvento({ tipo: 'WARN', mensagem: 'Arquivo rejeitado: conteúdo não corresponde a folha ponto', telefone: phone });
-                            return;
+                            // Verifica se o conteúdo é referente à folha ponto (heurística de texto)
+                            const text = (pdfData.text || '').toLowerCase();
+                            const isFolhaPonto = text.includes('folha') && text.includes('ponto') || text.includes('folha de ponto') || text.includes('folha ponto');
+                            if (!isFolhaPonto) {
+                                await appendRelatorioAtividades({ TIMESTAMP: formatDateTime(), TELEFONE: phone, NOME: document.pushName || '', ACAO: 'REJEITADO_CONTEUDO', PATH: '' });
+                                await queueMessage(fromJid, '❌ O PDF enviado não parece ser uma folha de ponto. Apenas PDFs de folha de ponto (1 página) são aceitos. Seu arquivo foi recusado e não será salvo.', 2);
+                                logEvento({ tipo: 'WARN', mensagem: 'Arquivo rejeitado: conteúdo não corresponde a folha ponto', telefone: phone });
+                                return;
+                            }
                         }
-
-                        // Se passou nas validações, prossegue com salvamento
+                        // Para docs genéricos (await_document): apenas aceita PDF, sem restrições de páginas ou conteúdo
                     } catch (validationErr) {
                         logEvento({ tipo: 'ERRO', mensagem: 'Erro ao validar PDF', telefone: phone, extra: validationErr.message });
                         await queueMessage(fromJid, '❌ Erro ao validar o PDF. Tente novamente mais tarde.', 2);
@@ -1268,6 +1655,16 @@ app.post('/webhook', async (req, res) => {
                         storageCategory = 'folha_ponto';
                         monthRef = monthName;
                         storageRelativePath = path.join(yearDir, monthDir);
+                    } else if (state.step === 'await_document' && state.category) {
+                        // ===== NOVO: Upload genérico para outras categorias =====
+                        const docConfig = DOCFLOW_CONFIG[state.category];
+                        if (docConfig) {
+                            storageCategory = state.category;
+                            action = `ENVIO_${state.category.toUpperCase().replace(/_/g, '_')}`;
+                            storageRelativePath = docConfig.subPath;
+                            destDir = path.join(PUBLIC_BASE, docConfig.subPath);
+                        }
+                        // Não valida número de páginas ou conteúdo para docs genéricos
                     } else if (document.fileName && /atestad/i.test(document.fileName)) {
                         // heurística: se filename contém 'atest', salva em ATESTADOS_BASE
                         destDir = ATESTADOS_BASE;
@@ -1404,10 +1801,16 @@ app.post('/webhook', async (req, res) => {
                         await stateManager.clearState(fromJid);
                     }
 
-                    // Confirma ao usuário: mensagem diferente se foi substituição
+                    // Confirma ao usuário: mensagem diferente conforme o fluxo
                     if (state.step === 'await_pdf' && state.replace) {
                         const month = state.month || currentMonth();
                         await queueMessage(fromJid, `✅ Substituí sua folha de *${month}* e salvei com sucesso.`, 2);
+                    } else if (state.step === 'await_document') {
+                        const label = state.label || 'Documento';
+                        await queueMessage(fromJid, `✅ Recebi seu *${label}* e salvei com sucesso.`, 2);
+                        // Limpa estado e volta ao menu
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        await sendMainMenuList(fromJid, state.userName, context);
                     } else {
                         await queueMessage(fromJid, `✅ Recebi seu arquivo *${document.fileName}* e salvei com sucesso.`, 2);
                     }

@@ -19,12 +19,12 @@ function Stop-ProcessOnPort {
         }
 
         $pids = $connections | Select-Object -ExpandProperty OwningProcess -Unique
-        foreach ($pid in $pids) {
-            if ($pid -and $pid -gt 0) {
-                $processInfo = Get-Process -Id $pid -ErrorAction SilentlyContinue
+        foreach ($processId in $pids) {
+            if ($processId -and $processId -gt 0) {
+                $processInfo = Get-Process -Id $processId -ErrorAction SilentlyContinue
                 if ($processInfo) {
-                    Write-Host "Encerrando processo na porta ${Port}: $($processInfo.ProcessName) (PID $pid)" -ForegroundColor Yellow
-                    Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+                    Write-Host "Encerrando processo na porta ${Port}: $($processInfo.ProcessName) (PID $processId)" -ForegroundColor Yellow
+                    Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
                 }
             }
         }
